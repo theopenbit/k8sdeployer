@@ -18,9 +18,9 @@ cd test
 ../k8sdeployer.rb -n demo2 -t
 
 #file processing and deployment to kubernetes for namespace 'demo2' 
-../k8sdeployer.rb -n demo2 -t
+../k8sdeployer.rb -n demo2 
 
 ```
-The template files to be processes are placed under the subdirectory ```k8s```.
-The order how the files are deployed is configured in the file ```k8sdeployorder.yaml```.
+The template files to be processes are placed in the subdirectory ```k8s```.
+The order how the files are deployed, is configured in the file ```k8sdeployorder.yaml```.
 All namespace specific values are placed in a file ```namespace-<nameOfNamespace>-config.yaml.erb```
