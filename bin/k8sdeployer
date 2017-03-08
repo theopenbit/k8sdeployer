@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+#
+# deploy into k8s based on templating
+# no need for helm in your k8s cluster
+# you only need to declare your yaml-files 
+# in the directory k8s and define a config file
+# for each namespace you want to deploy the
+# file into. The order used during deploying is
+# defined in the file k8sdeployorder.yml
+# 
+# kubectl must be in PATH
+# The enviroment variable KUBECONFIG must be set
+#
+# author theOpenBit <tob at schoenesnetz.de>
+# license gpl v3 https://www.gnu.org/licenses/gpl.txt
+#
+#
+require 'optparse'
+require 'k8sdeployer'
+
+options = {}
+optparse = OptionParser.new do |opts|
+    opts.banner = "Usage: k8sdeployer.rb [options]"
+    
+    opts.on("-n", "--namespace name",String,"the namespace where to deploy into") do |n|
+        options[:namespace] = n
+    end
+    
+    opts.on("-t", "--test","process files without deployment") do |t|
+        options[:test] = t
+    end
+    
+    opts.on("-d", "--directory dir", String,"base directory containing files - default is current directory") do |d|
+        options[:directory] = d
+    end
+end
+
+begin
+    optparse.parse!
+    mandatory = [:namespace]
+    directory = '.'  
+    if !options[:directory].nil? then
+        directory = options[:directory]
+    end
+    missing = mandatory.select{ |param| options[param].nil? }
+    raise OptionParser::MissingArgument, missing.join(', ') unless missing.empty?
+rescue OptionParser::ParseError => e
+    puts e
+    puts optparse
+    exit 1
+end
+
+K8sdeployer.new.processFiles(directory, options[:namespace],options[:test])
