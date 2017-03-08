@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    application: demo-nginx
+    version: v0.0.1
+    variant: v<%= namespaceconfig['variant'] %>
+  name: demo-nginx
+  namespace: <%= namespace %>  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: demo-nginx
+  template:
+    metadata:
+      labels:
+        application: demo-nginx
+        version: v0.0.1
+    spec:
+      containers:
+      - name: service
+        image: theopenbit/demo-nginx:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
