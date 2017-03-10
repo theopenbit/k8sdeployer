@@ -26,7 +26,9 @@ The order how the files are deployed, is configured in the file ```k8sdeployorde
 All namespace specific values are placed in a file ```namespace-<nameOfNamespace>-config.yaml.erb```
 
 # Usage using the docker container
-If you are using the docker image theopenbit/k8sdeployer, you have to map your files as volume into the container.
-The kubeconfig directory have to mapped into the container same as its host path either. Take a look at the example and the usage will be clear:
+If you are using the docker image theopenbit/k8sdeployer (for rpi theopenbit/rpi-k8sdeployer), you have to map your files as volume into the container.
+The kubeconfig directory have to mapped into the container with the same path as the host path. 
+The environment variable ```KUBECONFIG``` has to be set to the kubeconfig file.
+Take a look at the example and the usage will be clear:
 
 ```docker run -v <pathToYourWorkingDir>:/k8swork -v <hostPathOfKubeconfig>:<hostPathOfKubeconfig> -e KUBECONFIG=<hostPathOfKubeconfig>/kubeconfig.conf theopenbit/k8sdeployer -n <namespace>  -d /k8swork```
