@@ -46,13 +46,22 @@ class K8sdeployer
             Dir.delete("#{directory}/build")
         end
         Dir.mkdir("#{directory}/build")
-        if File.exist?("#{directory}/namespace-#{namespace}-config.yaml.erb") then
-            renderer = ERB.new(File.read("#{directory}/namespace-#{namespace}-config.yaml.erb"))
+        if File.exist?("#{directory}/namespace-config.yaml.erb") then
+            renderer = ERB.new(File.read("#{directory}/namespace-config.yaml.erb"))
             namespaceconfig = YAML.load(renderer.result(binding()))
             File.write("#{directory}/build/namespace-#{namespace}-config.yaml",YAML.dump(namespaceconfig))
         else
-            puts "No namespace specific config file! processing without it..."
+            puts "No global namespace config file! processing without it..."
             namespaceconfig = Hash.new   
+        end
+ 
+        if File.exist?("#{directory}/namespace-#{namespace}-config.yaml.erb") then
+            renderer = ERB.new(File.read("#{directory}/namespace-#{namespace}-config.yaml.erb"))
+            namespaceconfigspecific= YAML.load(renderer.result(binding()))
+            namespaceconfig.merge(namespaceconfigspecific)
+            File.write("#{directory}/build/namespace-#{namespace}-config.yaml",YAML.dump(namespaceconfig))
+        else
+            puts "No namespace specific config file! processing without it..."               
         end
         namespaceErb= "apiVersion: v1\nkind: Namespace\nmetadata:\n  name: <%= namespace %>"
         renderer = ERB.new(namespaceErb)        

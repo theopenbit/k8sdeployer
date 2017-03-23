@@ -24,6 +24,8 @@ cd test
 The template files to be processes are placed in the subdirectory ```k8s```.
 The order how the files are deployed, is configured in the file ```k8sdeployorder.yaml```.
 All namespace specific values are placed in a file ```namespace-<nameOfNamespace>-config.yaml.erb```
+Default values for all namespaces are placed in a file ``namespace-config.yaml.erb```
+Both config files are optional
 
 # Usage using the docker container
 If you are using the docker image theopenbit/k8sdeployer, you have to map your files as volume into the container.
